@@ -1,0 +1,429 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="2541c0ea-376e-4e44-b2d9-c67829201abe" name="Default Changelist" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="DefaultGradleProjectSettings">
+    <option name="isMigrated" value="true" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="localRepository" value="C:\MIME\maven\MavenRepository" />
+        <option name="mavenHome" value="F:/../maven/apache-maven-3.3.9" />
+        <option name="userSettingsFile" value="C:\MIME\maven\apache-maven-3.3.9\conf\settings.xml" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="ProjectId" id="1ZpPT2wG1DVbO8fAcrSPR485oiY" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1553778859974" />
+    <property name="extract.method.default.visibility" value="private" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
+    <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.0" />
+    <property name="settings.editor.selected.configurable" value="MavenSettings" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="E:\学习\数据结构与算法\Algorithm\Sort\src" />
+      <recent name="E:\学习\数据结构与算法\Algorithm\Sort" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\MIME\Workplaces\IdeaProjects\workplace\Algorithm" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Application.Test (1)">
+    <configuration name="DailyTemperatures" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="用友网络科技股份有限公司.DailyTemperatures" />
+      <module name="企业真题" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="用友网络科技股份有限公司.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="PrintMatrix" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="algorithms.PrintMatrix" />
+      <module name="Other" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="algorithms.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ReverseList" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="algorithms.ReverseList" />
+      <module name="Other" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="algorithms.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Test (1)" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="sort.Test" />
+      <module name="Sort" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="sort.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Test" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="Test.Test" />
+      <module name="Other" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="Test.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Application.Test" />
+      <item itemvalue="Application.PrintMatrix" />
+      <item itemvalue="Application.DailyTemperatures" />
+      <item itemvalue="Application.ReverseList" />
+      <item itemvalue="Application.Test (1)" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.Test (1)" />
+        <item itemvalue="Application.ReverseList" />
+        <item itemvalue="Application.Test" />
+        <item itemvalue="Application.DailyTemperatures" />
+        <item itemvalue="Application.PrintMatrix" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="ServiceViewManager">
+    <option name="viewStates">
+      <list>
+        <serviceView>
+          <treeState>
+            <expand />
+            <select />
+          </treeState>
+        </serviceView>
+      </list>
+    </option>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="2541c0ea-376e-4e44-b2d9-c67829201abe" name="Default Changelist" comment="" />
+      <created>1550756025700</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1550756025700</updated>
+      <workItem from="1550756029178" duration="132000" />
+      <workItem from="1550756379553" duration="192000" />
+      <workItem from="1552204174225" duration="1320000" />
+      <workItem from="1552310474899" duration="1902000" />
+      <workItem from="1553414180837" duration="21037000" />
+      <workItem from="1553653932709" duration="13614000" />
+      <workItem from="1553691454087" duration="6324000" />
+      <workItem from="1553773781388" duration="3813000" />
+      <workItem from="1554040093346" duration="665000" />
+      <workItem from="1554104455565" duration="5259000" />
+      <workItem from="1554192255315" duration="182000" />
+      <workItem from="1554724090075" duration="731000" />
+      <workItem from="1565076198637" duration="1423000" />
+      <workItem from="1568033600502" duration="3118000" />
+      <workItem from="1568176968715" duration="21000" />
+      <workItem from="1569479845134" duration="577000" />
+      <workItem from="1570966912426" duration="2519000" />
+      <workItem from="1571798450129" duration="5000" />
+      <workItem from="1571798485543" duration="30000" />
+      <workItem from="1585533084501" duration="14296000" />
+    </task>
+    <task id="LOCAL-00001" summary="冒泡、插入、选择">
+      <created>1553436163718</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1553436163718</updated>
+    </task>
+    <task id="LOCAL-00002" summary="归并排序">
+      <created>1553502320417</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1553502320417</updated>
+    </task>
+    <task id="LOCAL-00003" summary="修改权限修饰符">
+      <created>1553502383584</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1553502383584</updated>
+    </task>
+    <task id="LOCAL-00004" summary="小和问题">
+      <created>1553519092558</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1553519092558</updated>
+    </task>
+    <task id="LOCAL-00005" summary="归并-逆序对问题">
+      <created>1553696335731</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1553696335731</updated>
+    </task>
+    <task id="LOCAL-00006" summary="逆序对问题">
+      <created>1553697429287</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1553697429287</updated>
+    </task>
+    <task id="LOCAL-00007" summary="荷兰国旗问题（非快排）">
+      <created>1553778778600</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1553778778600</updated>
+    </task>
+    <task id="LOCAL-00008" summary="快速排序">
+      <created>1554192406529</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1554192406529</updated>
+    </task>
+    <task id="LOCAL-00009" summary="线性递归和尾递归求1000的阶乘">
+      <created>1565076776454</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1565076776454</updated>
+    </task>
+    <task id="LOCAL-00010" summary="2020秋招-用友-编程真题，leetcode739">
+      <created>1570969377925</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1570969377925</updated>
+    </task>
+    <task id="LOCAL-00011" summary="添加题目：输入一个链表，按链表从尾到头的顺序返回一个ArrayList">
+      <created>1585544752980</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1585544752980</updated>
+    </task>
+    <task id="LOCAL-00012" summary="添加了一点注释">
+      <created>1585550496996</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1585550496996</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="冒泡、插入、选择" />
+    <MESSAGE value="归并排序" />
+    <MESSAGE value="修改权限修饰符" />
+    <MESSAGE value="小和问题" />
+    <MESSAGE value="归并-逆序对问题" />
+    <MESSAGE value="逆序对问题" />
+    <MESSAGE value="荷兰国旗问题（非快排）" />
+    <MESSAGE value="快速排序" />
+    <MESSAGE value="线性递归和尾递归求1000的阶乘" />
+    <MESSAGE value="2020秋招-用友-编程真题，leetcode739" />
+    <MESSAGE value="添加题目：输入一个链表，按链表从尾到头的顺序返回一个ArrayList" />
+    <MESSAGE value="添加了一点注释" />
+    <option name="LAST_COMMIT_MESSAGE" value="添加了一点注释" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="283" y="0" key="CommitChangelistDialog2" timestamp="1585550495362">
+      <screen x="0" y="0" width="1366" height="768" />
+    </state>
+    <state x="283" y="0" key="CommitChangelistDialog2/0.0.1366.768@0.0.1366.768" timestamp="1585550495362" />
+    <state width="1323" height="238" key="GridCell.Tab.0.bottom" timestamp="1585554861245">
+      <screen x="0" y="0" width="1366" height="768" />
+    </state>
+    <state width="1323" height="238" key="GridCell.Tab.0.bottom/0.0.1366.768@0.0.1366.768" timestamp="1585554861245" />
+    <state width="1323" height="238" key="GridCell.Tab.0.center" timestamp="1585554861245">
+      <screen x="0" y="0" width="1366" height="768" />
+    </state>
+    <state width="1323" height="238" key="GridCell.Tab.0.center/0.0.1366.768@0.0.1366.768" timestamp="1585554861245" />
+    <state width="1323" height="238" key="GridCell.Tab.0.left" timestamp="1585554861245">
+      <screen x="0" y="0" width="1366" height="768" />
+    </state>
+    <state width="1323" height="238" key="GridCell.Tab.0.left/0.0.1366.768@0.0.1366.768" timestamp="1585554861245" />
+    <state width="1323" height="238" key="GridCell.Tab.0.right" timestamp="1585554861245">
+      <screen x="0" y="0" width="1366" height="768" />
+    </state>
+    <state width="1323" height="238" key="GridCell.Tab.0.right/0.0.1366.768@0.0.1366.768" timestamp="1585554861245" />
+    <state width="1323" height="238" key="GridCell.Tab.1.bottom" timestamp="1585554861246">
+      <screen x="0" y="0" width="1366" height="768" />
+    </state>
+    <state width="1323" height="238" key="GridCell.Tab.1.bottom/0.0.1366.768@0.0.1366.768" timestamp="1585554861246" />
+    <state width="1323" height="238" key="GridCell.Tab.1.center" timestamp="1585554861245">
+      <screen x="0" y="0" width="1366" height="768" />
+    </state>
+    <state width="1323" height="238" key="GridCell.Tab.1.center/0.0.1366.768@0.0.1366.768" timestamp="1585554861245" />
+    <state width="1323" height="238" key="GridCell.Tab.1.left" timestamp="1585554861245">
+      <screen x="0" y="0" width="1366" height="768" />
+    </state>
+    <state width="1323" height="238" key="GridCell.Tab.1.left/0.0.1366.768@0.0.1366.768" timestamp="1585554861245" />
+    <state width="1323" height="238" key="GridCell.Tab.1.right" timestamp="1585554861246">
+      <screen x="0" y="0" width="1366" height="768" />
+    </state>
+    <state width="1323" height="238" key="GridCell.Tab.1.right/0.0.1366.768@0.0.1366.768" timestamp="1585554861246" />
+    <state x="275" y="116" key="Vcs.Push.Dialog.v2" timestamp="1585544761436">
+      <screen x="0" y="0" width="1366" height="768" />
+    </state>
+    <state x="275" y="116" key="Vcs.Push.Dialog.v2/0.0.1366.768@0.0.1366.768" timestamp="1585544761436" />
+    <state x="363" y="207" key="com.intellij.ide.util.TipDialog" timestamp="1585533084703">
+      <screen x="0" y="0" width="1366" height="768" />
+    </state>
+    <state x="363" y="207" key="com.intellij.ide.util.TipDialog/0.0.1366.768@0.0.1366.768" timestamp="1585533084703" />
+  </component>
+  <component name="masterDetails">
+    <states>
+      <state key="ArtifactsStructureConfigurable.UI">
+        <settings>
+          <artifact-editor />
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="FacetStructureConfigurable.UI">
+        <settings>
+          <last-edited>No facets are configured</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="GlobalLibrariesConfigurable.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="JdkListConfigurable.UI">
+        <settings>
+          <last-edited>1.8</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ModuleStructureConfigurable.UI">
+        <settings>
+          <last-edited>Other</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2073991" />
+                <option value="0.6" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ProjectJDKs.UI">
+        <settings>
+          <last-edited>1.8</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ProjectLibrariesConfigurable.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+    </states>
+  </component>
+</project>
