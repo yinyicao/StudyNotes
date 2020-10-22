@@ -1,53 +1,5 @@
 # Git笔记
 
-## 下载和配置
-
-### 下载
-
-> 下载地址：https://git-scm.com/download
-
-### 全局配置
-
-> 使用git  config --global 参数进行全局配置，这个参数表示你这台机器上所有的git仓库都会使用这个配置，你也可以对某个仓库指定不同的用户名和邮箱
-
-- 设置用户名<!--（在github上注册的用户名）-->
-
-  ```shell
-  git  config --global  user.name '你再github上注册的用户名'
-  ```
-
-- 设置用户邮箱：<!--（注册时候的邮箱，该配置会在github主页上显示谁提交了该文件）-->
-
-  ```shell
-  git  config --global  user.email  '注册时候的邮箱'
-  ```
-
-  用如下命令来看看是否配置成功
-
-  ```shell
-  git config --list
-  ```
-
-
-### 局部配置
-
-> 为不同的项目设置不同的用户名和邮箱
-
-- 找到项目所在目录下（工作区）的 .git/文件夹，进入.git/文件夹，然后执行如下命令分别设置用户名和邮箱
-
-  ```shell
-  git config user.name "用户名"
-  git config user.email "邮箱"
-  ```
-
-- 执行命令查看config文件
-
-  ```shell
-  cat config
-  ```
-
-------
-
 ## 基本操作命令
 
 > 前提条件：已经进入到工作区
@@ -62,12 +14,13 @@
 
 - 添加文件到Git仓库，分两步
 
-  1. 提交到git暂存区<!--（工作区中有一个隐藏目录.git，这个是Git的版本库。Git的版本库中存了一个称为stage的暂存区）-->
+1. 提交到git暂存区
+   > 工作区中有一个隐藏目录.git，这个是Git的版本库。Git的版本库中存了一个称为stage的暂存区
 
      添加指定文件到暂存区：
 
      ```shell
-     git add <file>
+     git add <file> # git add gitTest.txt
      ```
 
      添加所有修改的的文件到暂存区<!--(add和.之间有一个空格)-->：
@@ -76,25 +29,15 @@
      git add .
      ```
 
-     例如：
-
-     ```shell
-     git add gitTest.txt
-     ```
 
   2. 提交到本地仓库
 
      ```shell
-     git commit -m <message>
+     git commit -m <message> # git commit -m 添加gitTest文件
      ```
 
      message为提交的备注信息，一般为这次提交干了什么
 
-     例如：
-
-     ```shell
-     git commit -m 添加gitTest文件
-     ```
 
 - add和commit组合命令<!--（git add .和git commit -m <mesage>的合并）-->
 
@@ -177,9 +120,11 @@
   | | |
   ```
 
-  ### 版本回退
+### 版本回退
 
-- 版本回退到指定版本<!--（版本号就是git log信息中commit 后面的一大串内容）-->
+- 版本回退到指定版本（<span style="color:red">ps：版本号就是git log信息中commit 后面的一大串内容</span>）
+
+  > 指将内容commit后需要进行回退的操作
 
   ```shell
   git reset --hard 版本号
@@ -196,6 +141,8 @@
 
 - 版本回退到前面几个版本
 
+  <span style="color:red">如果使用windows的cmd控制台，^会被识别为换行符（如：`git reset --hard "HEAD^"`），建议加上引号或使用~</span>
+
   ```shell
   git reset --hard HEAD~版本数/HEAD^
   ```
@@ -203,26 +150,15 @@
   例如：(回退到上一个版本)
 
   ```shell
-  git reset --hard HEAD~1
-  ```
-
-  或者
-
-  ```shell
-  git reset --hard HEAD^
+  git reset --hard HEAD~1 #或者git reset --hard HEAD^
   ```
 
   又例如：（回退到上上一个版本）
 
   ```shell
-  git reset --hard HEAD~2
+  git reset --hard HEAD~2 #或者git reset --hard HEAD^^
   ```
 
-  或者
-
-  ```shell
-  git reset --hard HEAD^^
-  ```
 
 - 查看操作命令历史记录
 
@@ -248,11 +184,11 @@ git reflog
 
 - git status命令
 
-  通过这个命令可以查看git中文件状态，比如一个文件已经提交到本地仓库，再对本地文件修改等操作，这时执行git status命令，文件名显示为红色，如下：
+  通过这个命令可以查看git中文件状态，比如一个文件已经提交到本地仓库，再对本地文件修改等操作，这时执行git status命令，文件名显示为<span style="color:red">红色</span>，如下：
 
   <img src="_images/1547695749454.png" />
 
-  表示文件还没有add到暂存区。这时执行add提交到暂存区后，文件名显示为绿色，如下：
+  表示文件还没有add到暂存区。这时执行add提交到暂存区后，文件名显示为<span style="color:green">绿色</span>，如下：
 
   <img src="_images/1547695948063.png" />
 
@@ -262,20 +198,37 @@ git reflog
 
   此时文件已经提交到本地仓库。
 
-- 丢弃暂存区的修改
+- 丢弃未进入暂存区的修改（还没有放到暂存区，回到和版本库一模一样的状态）
 
-  当我们修改文件，通过git add <file>命令后，文件存在本地暂存区中。这时希望撤销本次对暂存区的提交，撤销后回到未add的状态。可通过下面的命令：
+  当修改文件，还未add，希望可以回到未更改前的状态。<span style="color:red">只回退修改的文件，不会删除新增的文件</span>：
 
   ```shell
-  git reset HEAD 文件
+  git checkout -- filaname #单个被修改文件的回退
+  git checkout -- *        #所有被修改文件的回退
+  ```
+  当新增文件，还未add,希望可以删除这些文件。<span style="color:red">只删除新增的文件，不会回退修改的文件</span>：
+
+  ```shell
+  git clean -n  #显示将要删除的 文件
+  git clean -f  #删除文件
+  git clean -df #删除文件和目录
   ```
 
-- 丢弃工作区的修改
+- 丢弃add暂存区的修改
 
-  通过commit命令之后，文件已经更新到本地仓库中，也就是已经更新到工作区中。这时希望撤销本次对工作区的提交，撤销后回到未commit的状态。可通过下面的命令：
+  当修改文件后，通过git add <file>命令后，文件存在本地暂存区中。这时希望撤销本次对暂存区的提交，<span style="color:red">撤销后回到未add的状态</span>。可通过下面的命令：
 
   ```shell
-  git checkout -- 文件
+  git reset HEAD 文件名 #单个文件
+  git reset HEAD .     #所有文件
+  ```
+
+- 丢弃commit版本库的修改
+
+  通过commit命令之后，文件已经更新到本地仓库中，也就是已经更新到版本库中，在本地`git log`已经可以查看到提交日志。这时希望撤销本次对工作区的提交，<span style="color:red">撤销后变成add之后，commit之前状态</span>。可通过下面的命令：
+
+  ```shell
+  git reset --soft  HEAD^ 
   ```
 
 ------
@@ -284,7 +237,14 @@ git reflog
 
 > 通过gitee或github创建远程仓库并于本地仓库建立连接，将代码和文件托管到远程仓库中。
 
+- 查看远程仓库信息
+
+  ```shell
+  git remote -v
+  ```
+
 ### 与远程仓库建立连接
+
 
 - 在gitHub或码云上创建一个新的仓库，将远程仓库的git地址复制下来。然后通过命令建立连接，如下：
 
@@ -373,14 +333,9 @@ git branch --set-upstream-to=origin/dev  dev
 - 创建分支
 
   ```shell
-  git branch <name> 
+  git branch <name>  # git branch dev
   ```
 
-  例如（下同）：
-
-  ```shell
-  git branch dev
-  ```
 
 - 切换分支
 
@@ -430,11 +385,6 @@ git branch --set-upstream-to=origin/dev  dev
 
 ### 多人协作
 
-- 查看远程仓库信息
-
-  ```shell
-  git remote -v
-  ```
 
 - 从远程抓取分支（pull 则是将远程主机的master分支最新内容拉下来后与当前本地分支直接合并 fetch+merge）
 
@@ -465,35 +415,6 @@ git branch --set-upstream-to=origin/dev  dev
   
 
 ## 其它
-
-### .gitignore的配置
-
-1. 首先在与.git文件夹同级目录创建.gitignore文件
-
-   ```shell
-   admin@DESKTOP-ABC MINGW64 /e/workspace/blog_yyc (master)
-   $ touch .gitignore
-   ```
-
-2. 编辑文件，加入需要忽略的文件和文件夹，规则如下：
-
-   ```shell
-   # 此为注释 – 将被 Git 忽略
-    
-   *.a       # 忽略所有 .a 结尾的文件
-   !lib.a    # 但 lib.a 除外
-   /TODO     # 仅仅忽略项目根目录下的 TODO 文件，不包括 subdir/TODO
-   build/    # 忽略 build/ 目录下的所有文件
-   doc/*.txt # 会忽略 doc/notes.txt 但不包括 doc/server/arch.txt
-   ```
-
-   **注意：**如果你是新加的，这里需要注意的是.gitignore只能作用于没有被track的文件，也就是工作区的文件，对于add，commit操作后的文件是没有作用的，这个时候需要先把本地的缓存删除，在去提交，就可以实现忽略整个仓库文件了。
-
-   ```shell
-   git rm -r --cached .
-   git add .
-   git commit -m 'update'
-   ```
 
 ### 多人协作代码行统计
 

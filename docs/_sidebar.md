@@ -5,7 +5,9 @@
   * [Linux端口操作](Linux/Linux端口操作)
   * [Vim便捷命令](Linux/Vim便捷命令)
 * **Git**
-* * [Git常用命令](Git/Git常用命令)
+* * [Git常用操作及命令](Git/Git常用命令)
+  * [Git下载与配置](Git/Git下载和配置)
+  * [gitignore的配置](Git/gitignore的配置)
 * **Java**
 * * [Java基础](Java/Java基础)
   * [Java关键字](Java/Java关键字)
