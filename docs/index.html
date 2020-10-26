@@ -9,8 +9,9 @@
   <!--vue官网主题-->
   <!-- <link rel="stylesheet" href="//unpkg.com/docsify/lib/themes/vue.css"> -->
   <!-- vue官网主题 CDN版本 -->
-  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify/themes/vue.css">
+  <!-- <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify/themes/vue.css"> -->
   <!-- <link rel="stylesheet" href="//unpkg.com/docsify/lib/themes/dark.css"> -->
+  <link rel="stylesheet" href="asserts/vue.css">
 
 </head>
 <body>
@@ -49,24 +50,31 @@
   </script>
   
   <!-- <script src="//unpkg.com/docsify/lib/docsify.min.js"></script> -->
-  <script src="//cdn.jsdelivr.net/npm/docsify/lib/docsify.js"></script>
+  <!-- <script src="//cdn.jsdelivr.net/npm/docsify/lib/docsify.js"></script> -->
+  <script src="asserts/docsify.min.js"></script>
   <!--离线模式 -->
   <script>
     if (typeof navigator.serviceWorker !== 'undefined') {
-      navigator.serviceWorker.register('sw.js')
+      navigator.serviceWorker.register('asserts/sw.js')
     }
   </script>
   <!--shell代码高亮-->
-  <script src="//unpkg.com/prismjs/components/prism-bash.js"></script>
+  <!-- <script src="//unpkg.com/prismjs/components/prism-bash.js"></script> -->
+  <script src="asserts/prism-bash.js"></script>
   <!--Java代码高亮-->
-  <script src="//unpkg.com/prismjs/components/prism-java.min.js"></script>
+  <!-- <script src="//unpkg.com/prismjs/components/prism-java.min.js"></script> -->
+  <script src="asserts/prism-java.min.js"></script>
   <!--SQL代码高亮-->
-  <script src="//unpkg.com/prismjs/components/prism-sql.min.js"></script>
+  <!-- <script src="//unpkg.com/prismjs/components/prism-sql.min.js"></script> -->
+  <script src="asserts/prism-sql.min.js"></script>
   <!--全文搜索插件-->
-  <script src="//unpkg.com/docsify/lib/plugins/search.js"></script>
+  <!-- <script src="//unpkg.com/docsify/lib/plugins/search.js"></script> -->
+  <script src="asserts/search.js"></script>
   <!--复制到剪贴板插件-->
-  <script src="//unpkg.com/docsify-copy-code"></script>
+  <!-- <script src="//unpkg.com/docsify-copy-code"></script> -->
+  <script src="asserts/docsify-copy-code.min.js"></script>
   <!--字数统计插件-->
-  <script src="//unpkg.com/docsify-count/dist/countable.js"></script>
+  <!-- <script src="//unpkg.com/docsify-count/dist/countable.js"></script> -->
+  <script src="asserts//countable.js"></script>
 </body>
 </html>
