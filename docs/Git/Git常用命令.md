@@ -109,18 +109,73 @@
   | |
   * |   commit 7787f293c819b4b6b871dbd152bebf0b5df9dc8f
   |\ \  Merge: a2bacb4 495c543
-  | | | Author: yyc <yinyicao@qq.com>
-  | | | Date:   Thu Jul 2 11:00:05 2020 +0000
-  | | |
-  | | |     Merge branch 'fixbug/passengerInf' into 'master'
-  | | |
-  | | |     Fixbug/passenger inf
-  | | |
-  | | |     See merge request xxx/xxx!279
   | | |
   ```
+- 查看操作命令历史记录日志
+
+  > 可以通过 git reset --hard [hash] 回退到指定操作版本，其中hash为git reflog看到的操作ID。
+  
+  ```shell
+git reflog
+  ```
+
+  例如：
+  
+  ```shell
+  $ git reflog
+  bc70ed2 (HEAD -> master) HEAD@{0}: reset: moving to HEAD~1
+  7fd2c6a HEAD@{1}: commit: 添加第二行内容
+  bc70ed2 (HEAD -> master) HEAD@{2}: commit: 添加第一行内容
+  16ffdfa HEAD@{3}: reset: moving to 16ffdfa48ccc31bdb11d66ad9a552bc56d90d793
+  2e8b022 HEAD@{4}: commit: 添加了三行
+  16ffdfa HEAD@{5}: commit (initial): 添加gitTest文件
+  ```
+
+### 合并commit
+
+> 合并多个commit为一个完整commit。可以对某一段线性提交历史进行编辑、删除、复制、粘贴；因此，合理使用rebase命令可以使我们的提交历史干净、简洁！参考：<https://www.jianshu.com/p/4a8f4af4e803>
+
+- 命令
+
+  ```shell
+   git rebase -i  [startpoint]  [endpoint]
+  ```
+
+  其中`-i`的意思是`--interactive`，即弹出交互式的界面让用户编辑完成合并操作，`[startpoint]`  `[endpoint]`则指定了一个编辑区间，如果不指定`[endpoint]`，则该区间的终点默认是当前分支`HEAD`所指向的`commit`(注：该区间指定的是一个前开后闭的区间)。
+
+  比如我们需要合并最后三次的commit，在查看到了log日志后，我们就可以使用命令：
+
+  ```shell
+  git rebase -i 版本号 #git rebase -i HEAD~3 
+  ```
+
+  此时会弹出文件编辑，出现三行类似`pick 16ffdfa  添加gitTest文件`要我们进行修改，其中`pick`表示指令类型，git 为我们提供了以下几个命令：
+
+  > pick：保留该commit（缩写:p）
+  >
+  > reword：保留该commit，但我需要修改该commit的注释（缩写:r）
+  >
+  > edit：保留该commit, 但我要停下来修改该提交(不仅仅修改注释)（缩写:e）
+  >
+  > squash：将该commit和前一个commit合并（缩写:s）
+  >
+  > fixup：将该commit和前一个commit合并，但我不要保留该提交的注释信息（缩写:f）
+  >
+  > exec：执行shell命令（缩写:x）
+  >
+  > drop：我要丢弃该commit（缩写:d）
+
+  根据我们的需求，第一行不做修改，第二、三行将pick修改为 s后保存退出。
+
+  此时弹出文件编辑，要求我们输入commit注释信息，即合并后的commit注释信息，修改完后保存退出完成commit的合并。
 
 ### 版本回退
+
+> 参考：<https://blog.csdn.net/yxlshk/article/details/79944535>
+
+#### 回退(reset)
+
+**适用场景：** 如果想恢复到之前某个提交的版本，且那个版本之后提交的版本我们都不要了，就可以用这种方法。
 
 - 版本回退到指定版本（<span style="color:red">ps：版本号就是git log信息中commit 后面的一大串内容</span>）
 
@@ -159,26 +214,30 @@
   git reset --hard HEAD~2 #或者git reset --hard HEAD^^
   ```
 
+- reset后的push
 
-- 查看操作命令历史记录
+<span style="color:red">reset到指定版本之后，git log就会发现在其之后的commit记录就不存在了。</span>
 
-  > 可以通过 git reset --hard [hash] 回退到指定操作版本，其中hash为git reflog看到的操作ID。
-  
+此时，如果使用`git push`命令推送则会报错，因为本地库HEAD指向的版本比远程库的要旧。所以，<span style="color:red">这里需要使用命令`git push -f`强制推送（多人协作情况下不建议使用，因为这样会丢失commit记录，并且如果远程设置当前分支为保护分支是无法推送的）</span>
+
+#### 反做(revert)
+
+> revert 是回滚某个commit ，不是回滚“到”某个commit
+
+**原理：** git revert是用于“反做”某一个版本，以达到撤销该版本的修改的目的。比如，我们commit了三个版本（版本一、版本二、 版本三），突然发现版本二不行（如：有bug），想要撤销版本二，但又不想影响撤销版本三的提交，就可以用 git revert 命令来反做版本二，生成新的版本四，这个版本四里会保留版本三的东西，但撤销了版本二的东西。如下图所示：
+
+<img src="_images/E0MjA1ODE2MTg4.png" />
+
+**适用场景：** 如果我们想撤销之前的某一版本，但是又想保留该目标版本后面的版本，记录下这整个版本变动流程，就可以用这种方法。
+
+- 反做指定版本
+
   ```shell
-git reflog
+  git revert 版本号 # git revert 16ffdfa48ccc31bdb11d66ad9a552bc56d90d793
   ```
 
-  例如：
-  
-  ```shell
-  $ git reflog
-  bc70ed2 (HEAD -> master) HEAD@{0}: reset: moving to HEAD~1
-  7fd2c6a HEAD@{1}: commit: 添加第二行内容
-  bc70ed2 (HEAD -> master) HEAD@{2}: commit: 添加第一行内容
-  16ffdfa HEAD@{3}: reset: moving to 16ffdfa48ccc31bdb11d66ad9a552bc56d90d793
-  2e8b022 HEAD@{4}: commit: 添加了三行
-  16ffdfa HEAD@{5}: commit (initial): 添加gitTest文件
-  ```
+  通过`git log`会发现多了一条commit记录。（<span style="color:red">ps：revert几次就会产生几条commit记录，将多条commit记录合并可使用`git rebase `命令</span>）
+
 
 ### 撤销修改
 
