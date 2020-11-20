@@ -18,11 +18,16 @@
   <div data-app id="app">正在加载...</div>
   <script>
     window.$docsify = {
+      loadNavbar: true,
       loadSidebar: true,
       subMaxLevel: 3,
       name: '学习笔记',
       repo: '',
       auto2top: true,
+    // 可以避免侧边栏的变化(以此来决定是否跟随点击变化侧边栏目录)
+    //   alias: {
+    //   '/.*/_sidebar.md': '/_sidebar.md'
+    // },  
 
       // 全文搜索插件-完整配置参数
     search: {
@@ -76,5 +81,7 @@
   <!--字数统计插件-->
   <!-- <script src="//unpkg.com/docsify-count/dist/countable.js"></script> -->
   <script src="asserts/countable.js"></script>
+  <!--emoji插件-->
+  <script src="asserts/emoji.min.js"></script>
 </body>
 </html>
