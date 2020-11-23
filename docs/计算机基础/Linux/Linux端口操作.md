@@ -36,7 +36,9 @@ firewalld是centos7里面的新的防火墙命令，它底层还是使用 iptabl
 显示状态： `firewall-cmd --state`</br>
 查看所有打开的端口： `firewall-cmd --zone=public --list-ports`</br>
 更新防火墙规则： `firewall-cmd --reload`</br>
-查看区域信息:  `firewall-cmd --get-active-zones`</br>
+查看可用的区域：`firewall-cmd --get-zones`</br>
+查看当前的默认区域(关于区域的概念查看[附录](#zone))：`firewall-cmd --get-default-zone` <span id = 'list-default-zone' ></span></br>
+查看当前激活的区域:  `firewall-cmd --get-active-zones`</br>
 查看指定接口所属区域： `firewall-cmd --get-zone-of-interface=eth0`</br>
 拒绝所有包：`firewall-cmd --panic-on`</br>
 取消拒绝状态： `firewall-cmd --panic-off`</br>
@@ -48,6 +50,18 @@ firewalld是centos7里面的新的防火墙命令，它底层还是使用 iptabl
 重新载入：`firewall-cmd --reload`</br>
 查看：`firewall-cmd --zone=public --query-port=80/tcp`</br>
 删除：`firewall-cmd --zone=public --remove-port=80/tcp --permanent`</br>
+
+## 配置IP白名单
+
+添加：`firewall-cmd --permanent --zone=trusted --add-source=173.245.48.0/20`</br>
+重新载入：`firewall-cmd --reload`</br>
+确认 trusted 区域是否设置正确：`firewall-cmd --zone=trusted --list-all`</br>
+设置默认区域为drop([查看默认](#list-default-zone))：`firewall-cmd --set-default-zone=drop`</br>
+将默认网卡 eth0 分配给 drop 区域：`firewall-cmd --permanent --zone=drop --change-interface=eth0`</br>
+重新载入：`firewall-cmd --reload`</br>
+
+
+
 
 ------------
 
@@ -80,3 +94,19 @@ firewalld是centos7里面的新的防火墙命令，它底层还是使用 iptabl
 开放22-80范围的端口：`iptables -I INPUT -p tcp --dport 22:80 -j ACCEPT`</br>
 不允许80端口流出：`iptables -I OUTPUT -p tcp --dport 80 -j DROP`</br>
 
+
+
+# 附录1-区域(zone) 
+
+<span id="zone"></span>区域(zone)基本上是一组规则，它们决定了允许哪些流量，具体取决于你对计算机所连接的网络的信任程度。为网络接口分配了一个区域，以指示防火墙应允许的行为。
+Firewalld 一般已经默认内置了 **9 个区域(zone)**，大部分情况下，这些已经足够使用，按从最不信任到最受信任的顺序为：
+
+- `drop`：最低信任级别。所有传入的连接都将被丢弃而不会回复，并且只能进行传出连接。
+- `block`：与上述类似，但不是简单地删除连接，而是使用 icmp-host-prohibitedor 和 icmp6-adm-prohibited 消息拒绝传入的请求。
+- `public`：表示不信任的公共网络。您不信任其他计算机，但可能会视情况允许选择的传入连接。默认情况下，此区域为激活状态。
+- `external`：如果你使用防火墙作为网关，则为外部网络。将其配置为 NAT 转发，以便你的内部网络保持私有但可访问。
+- `internal`：external 区域的另一侧，用于网关的内部。这些计算机值得信赖，并且可以使用一些其他服务。
+- `dmz`：用于 DMZ (DeMilitarized Zone) 中的计算机（将无法访问网络其余部分的隔离计算机），仅允许某些传入连接。
+- `work`：用于工作机。信任网络中的大多数计算机。可能还允许其他一些服务。
+- `home`：家庭环境。通常，这意味着您信任其他大多数计算机，并且将接受其他一些服务。
+- `trusted`：信任网络中的所有计算机。可用选项中最开放的，应谨慎使用。
