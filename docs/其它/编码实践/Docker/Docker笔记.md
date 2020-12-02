@@ -185,6 +185,34 @@ CMD ["java", "Hello"] #表示容器启动后运行Hello.class
 
 我们可以在*Dockerfile*文件中多次使用`WORKDIR`。
 
+## 切换国内镜像源
+
+> docker切换镜像源
+
+编辑daemon.json文件，重启即可。
+
+```
+vim /etc/docker/daemon.json
+```
+
+加入以下镜像源内容：
+
+```json
+{
+"registry-mirrors": [ "https://1nj0zren.mirror.aliyuncs.com",
+        "https://docker.mirrors.ustc.edu.cn",
+        "http://f1361db2.m.daocloud.io",
+        "https://registry.docker-cn.com"]
+}
+```
+
+重启docker
+
+```shell
+systemctl restart docker
+```
+
+
 ## 实践：使用Docker搭建WordPress
 
 > 这里没有使用Dockerfile
