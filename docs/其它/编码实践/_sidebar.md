@@ -1,5 +1,7 @@
 * **Docker**
 * * [Docker笔记](其它/编码实践/Docker/Docker笔记)
+* **Kubernetes**
+* * [Kubernetes安装](其它/编码实践/Kubernetes/Kubernetes安装)
 * **Git**
 * * [Git常用操作及命令](其它/编码实践/Git/Git常用命令)
   * [Git下载与配置](其它/编码实践/Git/Git下载和配置)
