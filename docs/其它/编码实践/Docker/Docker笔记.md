@@ -185,6 +185,18 @@ CMD ["java", "Hello"] #表示容器启动后运行Hello.class
 
 我们可以在*Dockerfile*文件中多次使用`WORKDIR`。
 
+## Docker docker-compose
+**compose**
+官方文档：https://docs.docker.com/compose/
+
+**docker-compose文件说明**
+
+官方文档：[Compose file version 3 reference | Docker Documentation](https://docs.docker.com/compose/compose-file/)
+
+**dockerfile和docker-compose**
+
+有些教程用了 `dockerfile+docker-compose`, 是因为 `docker-compose.yml` 本身没有镜像构建的信息，如果镜像是从` docker registry` 拉取下来的，那么 `Dockerfile` 就不需要；如果镜像是需要 build 的，那就需要提供 `Dockerfile`。
+
 ## 切换国内镜像源
 
 > docker切换镜像源
@@ -385,13 +397,47 @@ This is first java app
 [root@yyc java-docker-app]#
 ```
 
+## 实践：使⽤Docker Compose编排WordPress博客
+
+编写`docker-compose.yaml`文件：
+
+```yaml
+# 用docker-compose部署WordPress博客
+version: "3.1"
+services:
+  wordpress:
+    image: wordpress:5.5.3-php7.2-apache
+    environment:
+      WORDPRESS_DB_HOST: mysql
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpresspassword
+      WORDPRESS_DB_NAME: wordpress
+    ports:
+      - "83:80"  
+    depends_on: 
+      - mysql  
+  mysql:
+    image: mysql:5.7.32
+    environment:
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpresspassword
+    volumes:
+      - ./mysql-data:/var/lib/mysql
+```
+
+在yaml文件同目录下，使用`docker-compose up`即可启动。
+
 ## 参考
 
 - [官方参考API](https://docs.docker.com/reference/)：各种命令都在这儿咯
 - [官方文档-安装Docker](https://docs.docker.com/engine/install/centos/)
 - [官方文档-启动Docker](https://docs.docker.com/config/daemon/systemd/)
 - [官方文档-Best practices for writing Dockerfiles](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/)
+- [官方文档-Compose file version 3 reference | Docker Documentation](https://docs.docker.com/compose/compose-file/)
 - [阮一峰—Docker 入门教程](http://www.ruanyifeng.com/blog/2018/02/docker-tutorial.html)
 - [阮一峰—Docker 微服务教程](http://www.ruanyifeng.com/blog/2018/02/docker-wordpress-tutorial.html)
 - [易百教程—Docker Dockerfile](https://www.yiibai.com/docker/docker-dockerfile.html)
 - [易百教程—Docker Java应用程序示例 ](https://www.yiibai.com/docker/docker-java-example.html)
+- [dockerfile 与 docker-compose的区别_Allen技术小站-CSDN博客](https://blog.csdn.net/londa/article/details/91815208)
