@@ -802,6 +802,15 @@ k8s-master-01   Ready    master   17m     v1.19.0
 k8s-node-01     Ready    <none>   9m32s   v1.19.0
 k8s-node-02     Ready    <none>   9m23s   v1.19.0
 ```
+发现这里node的roles为none，可以使用如下命令设置：
+
+```shell
+# 设置
+kubectl label node k8s-node-01 node-role.kubernetes.io/node=node
+
+# 取消
+kubectl label node k8s-node-01 node-role.kubernetes.io/node-
+```
 
 通过命令`kubectl get pod -n kube-system -o wide`如果发现有状态错误的pod,则可以执行kubctl --namesspaace=kube-system describepod <pod_name> 来查明错误原因，常见原因是镜像没有有下载完成。
 
@@ -825,6 +834,125 @@ kubectl delete pod [pod name]
 
 kubctl creat pod -f [file name]
 ```
+
+# 验证
+
+> 安装nginx验证是否成功
+
+任意目录创建一个`deployment.yaml`文件，内容如下：
+
+```
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: nginx-deployment
+  # labels:
+  #   app: nginx   
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+  replicas: 3
+  template:
+    metadata:
+      name: nginx
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.18.0
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - mountPath: /etc/nginx/
+              name: confs
+            - mountPath: /usr/share/nginx/html
+              name: htmls 
+          resources:
+            limits:
+              memory: 512Mi
+              cpu: "1"
+            requests:
+              memory: 256Mi
+              cpu: "0.2"
+      volumes:
+      - name: confs
+        hostPath:
+           path: conf
+          #  type: FileOrCreate   
+      - name: htmls
+        hostPath:
+           path: html
+          #  type: FileOrCreate       
+      restartPolicy: Always
+```
+
+**创建并启动：**
+
+```shell
+[root@k8s-master-01 ~]# kubectl create -f k8s/deployment.yaml --record
+```
+
+**查看deployments：**
+
+```shell
+[root@k8s-master-01 ~]# kubectl get deployments
+NAME               READY   UP-TO-DATE   AVAILABLE   AGE
+nginx-deployment   3/3     3            3           59m
+```
+
+**查看pods:**
+
+```shell
+[root@k8s-master-01 ~]# kubectl get pods
+NAME                                READY   STATUS    RESTARTS   AGE
+nginx-deployment-5d75b84f57-lpzlp   1/1     Running   0          57m
+nginx-deployment-5d75b84f57-rbgrh   1/1     Running   0          61m
+nginx-deployment-5d75b84f57-s5nfx   1/1     Running   0          57m
+```
+
+**创建Service对象(将Service端口代理至Pod端口示例)**
+
+```shell
+# 为deployment的nginx-deployment创建service，取名叫nginx-svc，并通过service的80端口转发至容器的80端口上。
+kubectl expose deployment/nginx-deployment --name=nginx-svc --port=80 --target-port=80 --protocol=TCP
+```
+
+**查看Service对象**
+
+```shell
+[root@k8s-master-01 ~]# kubectl get service
+NAME          TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)        AGE
+kubernetes    ClusterIP   10.96.0.1        <none>        443/TCP        2d1h
+nginx-svc     NodePort    10.103.247.211   <none>        80/TCP         56m
+```
+
+集群内部通过`curl  10.103.247.211` 可以访问，集群外部不可访问
+
+删除这个Service：
+
+```shell
+kubectl delete service nginx-svc
+```
+
+**创建Service对象(将创建的Pod对象使用“NodePort”类型的服务暴露到集群外部)**
+
+```shell
+# 创建一个service对象，并将nginx-deployment创建的pod对象使用NodePort类型暴露到集群外部。
+kubectl expose deployments/nginx-deployment --name=nginx-svc --port=80 --type=NodePort --protocol=TCP
+```
+
+查看Service对象
+
+```shell
+[root@k8s-master-01 ~]# kubectl get service
+NAME         TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)        AGE
+kubernetes   ClusterIP   10.96.0.1        <none>        443/TCP        2d1h
+nginx-svc    NodePort    10.105.164.181   <none>        80:32172/TCP   5s
+```
+
+集群内部通过`curl  10.105.164.181` 可以访问，集群外部可通过外网IP加端口32172访问（注意开放端口号规则）。
 
 
 
