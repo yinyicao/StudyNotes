@@ -53,7 +53,8 @@ firewalld是centos7里面的新的防火墙命令，它底层还是使用 iptabl
 
 ## 配置IP白名单
 
-添加：`firewall-cmd --permanent --zone=trusted --add-source=173.245.48.0/20`</br>
+添加：`firewall-cmd --permanent --zone=trusted --add-source=172.26.5.46`</br>
+删除：`firewall-cmd --permanent --zone=trusted --remove-source=172.26.5.46`</br>
 重新载入：`firewall-cmd --reload`</br>
 确认 trusted 区域是否设置正确：`firewall-cmd --zone=trusted --list-all`</br>
 设置默认区域为drop([查看默认](#list-default-zone))：`firewall-cmd --set-default-zone=drop`</br>

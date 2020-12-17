@@ -124,7 +124,9 @@ free -m
 setenforce 0 && sed -i 's/^SELINUX=.*/SELINUX=disable/' /etc/selinux/config
 ```
 
-#### *\*集群时间同步配置（可选\*一般时间都是一致的，如果不一致需要执行）*
+#### *\*集群时间同步配置*
+
+> #### （可选\*一般时间都是一致的，如果不一致需要执行）
 
 ```shell
 # 选择一个节点作为服务端
@@ -159,9 +161,9 @@ systemctl enable chronyd
 #systemctl restart crond
 ```
 
-#### *\*系统日志保存方式设置(可选\*不影响)*
+#### *\*系统日志保存方式设置*
 
-> master、node都需要执行
+> #### (可选\*不影响) master、node都需要执行
 
 - 原因：centos7以后，引导方式改为了systemd，所以会有两个日志系统同时工作只保留一个日志（journald）的方法
 - 设置rsyslogd 和 systemd journald
@@ -194,9 +196,9 @@ EOF
 systemctl restart systemd-journald
 ```
 
-#### *\*修改yum镜像源(\*可选，但建议设置，这样使用yum安装更快)*
+#### *\*修改yum镜像源*
 
-> master、node都需要执行
+> (\*可选，但建议设置，这样使用yum安装更快)  master、node都需要执行
 
 ```shell
 #方法：
@@ -297,7 +299,7 @@ tee /etc/docker/daemon.json << EOF
   "registry-mirrors": ["https://4bsnyw1n.mirror.aliyuncs.com"],
   "exec-opts":["native.cgroupdriver=systemd"]
 }
-EOF 
+EOF
 
 # 重启docker
 systemctl daemon-reload && systemctl restart docker && systemctl enable docker
@@ -372,7 +374,7 @@ kubeadm config print init-defaults >init.default.yaml
 cp init.default.yaml  init-config.yaml
 ```
 
-其中init-config.yaml文件内容如下：
+其中init-config.yaml文件内容如下(<span style="color:red">需要做一些修改</span>)：
 
 ```yaml
 apiVersion: kubeadm.k8s.io/v1beta2
@@ -744,11 +746,6 @@ k8s-node-02     NotReady   <none>   58s     v1.19.0
 
 #### 安装flannel插件
 
-kube-flannel.yml 文件下载不了的是因为网站被墙了，建议在/etc/hosts文件添加一条 199.232.68.133 raw.githubusercontent.com 就可以正常下载了。
-
-```shell
-echo '199.232.68.133 raw.githubusercontent.com' >> /etc/hosts
-```
 
 - 安装方法一：
 
@@ -766,12 +763,45 @@ echo '199.232.68.133 raw.githubusercontent.com' >> /etc/hosts
   # 安装
   kubectl apply -f kube-flannel.yml
   ```
+  
+
+如果出现kube-flannel.yml 文件下载不了的是因为网站被墙了，建议在/etc/hosts文件添加一条 199.232.68.133 raw.githubusercontent.com 就可以正常下载了，或者直接去github上找个这个文件就好了。
+
+```shell
+echo '199.232.68.133 raw.githubusercontent.com' >> /etc/hosts
+```
+
 
 验证flannel网络插件是否部署成功（Running即为成功）
 
 ```shell
 kubectl get pods -n kube-system |grep flannel  
 ```
+
+如果apply安装的时候出错了 ，可以通过describe查看日志
+
+```shell
+# 查看是否成功，发现报错了ErrImagePull
+[root@localhost k8s]# kubectl get pods -n kube-system |grep flannel
+kube-flannel-ds-574sf                   0/1     Init:ErrImagePull   0          9s
+kube-flannel-ds-9d8kg                   0/1     Init:ErrImagePull   0          8s
+kube-flannel-ds-pbf82                   0/1     Init:ErrImagePull   0          9s
+
+# 查看日志
+kubectl describe pod kube-flannel-ds-574sf -n kube-system
+```
+
+最终通过日志发现如果是镜像下载错误，可以手动下载（直接去hub.docker.com找flannel这个插件），比如：
+
+```shell
+# 手动下载
+docker pull easzlab/flannel:v0.13.0-amd64
+
+# 修改镜像名称
+docker tag easzlab/flannel:v0.13.0-amd64 quay.io/coreos/flannel:v0.13.0-amd64
+```
+
+下载完成后，需要修改一下刚刚下载下来的文件`kube-flannel.yml `：将flannel的版本号修改为刚刚我们手动pull的镜像一致即可。（有两个地方）。最后重新apply安装。
 
 验证插件安装状态
 
@@ -805,7 +835,7 @@ k8s-node-02     Ready    <none>   9m23s   v1.19.0
 发现这里node的roles为none，可以使用如下命令设置：
 
 ```shell
-# 设置
+# 设置roles为node
 kubectl label node k8s-node-01 node-role.kubernetes.io/node=node
 
 # 取消
