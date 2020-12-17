@@ -126,7 +126,7 @@ setenforce 0 && sed -i 's/^SELINUX=.*/SELINUX=disable/' /etc/selinux/config
 
 #### *\*集群时间同步配置*
 
-> #### （可选\*一般时间都是一致的，如果不一致需要执行）
+>  （可选\*一般时间都是一致的，如果不一致需要执行）
 
 ```shell
 # 选择一个节点作为服务端
@@ -163,7 +163,7 @@ systemctl enable chronyd
 
 #### *\*系统日志保存方式设置*
 
-> #### (可选\*不影响) master、node都需要执行
+>  (可选\*不影响) master、node都需要执行
 
 - 原因：centos7以后，引导方式改为了systemd，所以会有两个日志系统同时工作只保留一个日志（journald）的方法
 - 设置rsyslogd 和 systemd journald
