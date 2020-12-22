@@ -477,7 +477,7 @@ kubeadm init --config=init-config.yaml  | tee kubeadm-init.log
 > ```
 >
 
-生成信息如下：
+<details> <summary>生成信息如下：（点击展开）</summary>
 
 ```
 [root@VM-0-5-centos ~]# kubeadm init --config=init-config.yaml  | tee kubeadm-init.log
@@ -551,6 +551,8 @@ Then you can join any number of worker nodes by running the following on each as
 kubeadm join 172.30.0.5:6443 --token abcdef.0123456789abcdef \
     --discovery-token-ca-cert-hash sha256:f4b5ae084353e8eed3e30648b74259dae3f7dad2492045e26b52d7cc5bccf3a8
 ```
+
+</details>
 
 按照提示依次执行以下命令：
 
@@ -638,9 +640,9 @@ kubeadm reset
     > --discovery-token-ca-cert-hash sha256:f4b5ae084353e8eed3e30648b74259dae3f7dad2492045e26b52d7cc5bccf3a8
   ```
 
-  生成如下信息：
+<details> <summary>生成如下信息（点击展开）</summary>
 
-  ```
+```
   [preflight] Running pre-flight checks
             [WARNING SystemVerification]: this Docker version is not on the list of validated versions: 20.10.0. Latest validated version: 19.03
     [preflight] Reading configuration from the cluster...
@@ -655,7 +657,10 @@ kubeadm reset
     * The Kubelet was informed of the new secure connection details.
   
     Run 'kubectl get nodes' on the control-plane to see this node join the cluster.
-  ```
+```
+
+</details>
+
 
    然后可以在master上执行`kubectl get nodes`可以发现node节点加进来了（但是是NotReady状态，这是因为没有安装CNI网络插件）。
 

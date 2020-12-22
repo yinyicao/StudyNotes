@@ -7,6 +7,7 @@
 **Kubernetes**
 
 * [Kubernetes安装](其它/编码实践/Kubernetes/Kubernetes安装)
+* [Kubernetes工作负载](其它/编码实践/Kubernetes/K8S工作负载)
 
 **Git**
 
