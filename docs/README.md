@@ -35,6 +35,7 @@
 * * [Docker笔记](其它/编码实践/Docker/Docker笔记)
 * **Kubernetes**
 * * [Kubernetes安装](其它/编码实践/Kubernetes/Kubernetes安装)
+  * [Kubernetes工作负载](其它/编码实践/Kubernetes/K8S工作负载)
 * **Java Web**
 * * [Java Web三大组件](Java/JavaWeb/JavaWeb三大组件)
   * [Java Web会话管理](Java/JavaWeb/JavaWeb会话管理)

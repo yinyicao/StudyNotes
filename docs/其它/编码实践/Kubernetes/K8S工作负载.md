@@ -234,18 +234,18 @@ Node不是由Kubernetes创建的：它是由Google Compute Engine等云提供商
 > 关于资源清单个人理解：就是工作负载资源（ReplicaSet、Deployments、StatefulSets、DaemonSet等）配置文件.yaml。
 
 ```yaml
-# 定义k8s版本，不同版本下面会挂载不同的资源
-# 如果没有给定 group 名称，那么默认为 core，可以使用 kubectl api-versions 获取当前 k8s 版本上所有的 apiVersion 版本信息( 每个版本可能不同 )
+#定义k8s版本，不同版本下面会挂载不同的资源
+#如果没有给定 group 名称，那么默认为 core，可以使用 kubectl api-versions 获取当前 k8s 版本上所有的 apiVersion 版本信息( 每个版本可能不同 )
 apiVersion: group/apiversion 
  
-# 资源类别
+#资源类别
 kind:   
 
-# 资源元数据
+#资源元数据
 metadata：  
   # 资源名称
   name: 
-# 规格/期望的状态（disired state）
+#规格/期望的状态（disired state）
 spec: 
   # 容器[1-n个]
   containers:
@@ -293,6 +293,7 @@ spec:
   - 稳定、唯一的网络标志，即Pod重新调度后其PodName和HostName不变，基于Headless Service（即没有Cluster IP的Service）来实现
   - 有序的、优雅的部署和缩放，即Pod是有顺序的，在部署或者扩展的时候要依据定义的顺序依次进行（即从0到N-1（或从N-1到0），在下一个Pod运行之前所有之前的Pod必须都是Running和Ready状态），基于init containers来实现
   - 有序的、自动的滚动更新
+- 如果应⽤程序不需要任何稳定的标识符或有序部署、删除或缩放，则应该使⽤提供⽆状态副本的Controller部署应⽤。 诸如 Deployment 或者 ReplicaSet 可能更适合您的⽆状态需求。
 
 ### DaemonSet
 
@@ -437,11 +438,314 @@ kubectl get pods --show-labels
 **删除**
 
 ```shell
-# 删除rs,并删除管理的pod
-# kubectl delete replicasets [rs名字] / kubectl delete rs [rs名字]
+#删除rs,并删除管理的pod
+#kubectl delete replicasets [rs名字] / kubectl delete rs [rs名字]
 kubectl delete replicasets nginx
 
-# 删除rs,不删除管理的pod “--cascade=false”选项，取消级联关系。
-# kubectl delete replicasets [rs名字] --cascade=false
+#删除rs,不删除管理的pod “--cascade=false”选项，取消级联关系。
+#kubectl delete replicasets [rs名字] --cascade=false
 ```
 
+### Deployment
+
+Deployment其核心资源和ReplicaSet相似。
+
+**创建**
+
+(1) 命令行查看ReplicaSet清单定义规则
+
+```shell
+kubectl explain deployment
+kubectl explain deployment.spec
+kubectl explain deployment.spec.template
+```
+
+(2) 创建Deployment示例
+
+```shell
+vi deployment.yaml
+```
+
+<details> <summary>deployment.yaml文件信息（点击展开）</summary>
+
+```yaml
+apiVersion: apps/v1  #api版本定义
+kind: Deployment  #定义资源类型为Deploymant
+metadata:  #元数据定义
+  name: nginx-deploy  #deployment控制器名称
+  namespace: default  #名称空间
+spec:  #deployment控制器的规格定义
+  replicas: 2  #定义deployment副本数量为2个
+  selector:  #标签选择器，定义匹配Pod的标签
+    matchLabels:
+      app: nginx-deploy
+  template:  #Pod的模板定义
+    metadata:  #Pod的元数据定义
+      labels:  #定义Pod的标签，和上面的标签选择器标签一致，可以多出其他标签
+        app: nginx-deploy
+    spec:  #Pod的规格定义
+      containers:  #容器定义
+        - name: nginx  #容器名称
+          image: nginx:1.18.0  #容器镜像
+          ports:  #暴露端口
+            - name: http  #端口名称
+              containerPort: 80
+```
+
+</deatils>    
+
+(3) 创建Deployment对象
+
+```shell
+kubectl apply -f deployment.yaml --record
+#--record 可以方便的查看revision的变化
+```
+
+(4) 查看资源对象
+
+```shell
+kubectl get deployment    	#查看Deployment资源对象
+kubectl get rs    			#查看ReplicaSet资源对象
+kubectl get pods    		#查看Pod资源对象
+```
+
+**更新升级**
+
+修改`Pod`模板相关的配置参数便能完成`Deployment`控制器资源的更新。由于是声明式配置，因此对`Deployment`控制器资源的修改尤其适合使用`apply`和`patch`命令来进行；如果仅只是修改容器镜像，`“set image”`命令更为易用。
+
+- 通过`set image`命令将上面创建的`Deployment`对象的镜像版本改为`1.19.6`版本
+
+```shell
+kubectl set image deployment/nginx-deploy nginx=nginx:1.19.6
+#kubectl set image deployment/[deployment名称] [容器名称]=[镜像名称]
+
+
+#升级完成再次查看rs的情况，以下可以看到原的rs作为备份，而现在启动的是新的rs
+[root@k8s-master-01 ~]# kubectl set image deployment/nginx-deploy nginx=nginx:1.19.6
+deployment.apps/nginx-deploy image updated
+[root@k8s-master-01 k8s]# kubectl get rs
+NAME                      DESIRED   CURRENT   READY   AGE
+nginx-deploy-5b877f9666   2         2         2       10m
+nginx-deploy-bdfc8b95     0         0         0       63m
+
+#通过查看deployment的详细信息可以看到镜像已经更改
+kubectl get deployment -o wide
+
+#或者以自定义的方式查看image版本
+kubectl get pods -o custom-columns=Name:metadata.name,Image:spec.containers[0].image
+```
+
+**扩容**
+
+```shell
+#方式1：kubectl scale命令扩容
+kubectl scale deployment nginx-deploy --replicas 10
+#kubectl scale deployment 【deployment名称】 --replicas 10
+
+#方式2：直接修改配置清单方式进行扩容
+#kubectl edit deployment nginx-deploy
+
+#方式3：使用kubectl patch打补丁的方式进行扩容
+#kubectl patch deployment nginx-deploy -p '{"spec":{"replicas":5}}'
+```
+
+**回滚**
+
+```shell
+#回到上一个版本
+kubectl rollout undo deployment/nginx-deploy
+
+#查看版本
+kubectl get pods -o custom-columns=Name:metadata.name,Image:spec.containers[0].image
+
+#通过该命令查看更新历史记录
+[root@k8s-master-01 k8s]# kubectl rollout history deployment/nginx-deploy
+deployment.apps/nginx-deploy 
+REVISION  CHANGE-CAUSE
+1         kubectl apply --filename=deployment.yaml --record=true
+2         kubectl apply --filename=deployment.yaml --record=true
+
+#回滚到指定版本
+kubectl rollout undo deployment/nginx-deploy --to-revision=2
+```
+
+### StatefulSet
+
+StatefulSet⽬前需要⼀个 [Headless Service](https://kubernetes.io/docs/concepts/services-networking/service/#headless-services) 负责Pod的⽹络身份
+
+**创建**
+
+```shell
+vi statefulset.yaml
+```
+
+<details> <summary>statefulset.yaml文件信息（点击展开）</summary>
+
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: statefulset-nginx
+spec:
+  selector:
+    app: nginx
+  ports:
+    - port: 80
+      targetPort: 80
+      # 表示这是一个headlessService
+  clusterIP: None
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: nginx
+  labels:
+    app: nginx
+spec:
+  replicas: 3
+  serviceName: statefulset-nginx
+  template:
+    metadata:
+      name: nginx
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.18.0
+          imagePullPolicy: IfNotPresent
+          # glusterfs / ceph..
+      restartPolicy: Always
+  selector:
+    matchLabels:
+      app: nginx
+```
+
+</details>    
+
+同Deployment一样，使用如下命令启动：
+
+```shell
+kubectl create -f statefulset.yaml --record
+```
+
+会返回如下格式：
+
+```
+service/statefulset-nginx created
+statefulset.apps/nginx created
+```
+
+可以通过执行`kubectl get StatefulSet`以检查是否已创建部署。
+
+通过`kubectl get pods`查看部署的pod状态。
+
+### DaemonSet
+
+**创建**
+
+(1) 定义清单文件
+
+```shell
+vi daemonset.yaml
+```
+
+<details> <summary>daemonset.yaml文件信息（点击展开）</summary>
+
+```yaml
+apiVersion: apps/v1             #api版本定义
+kind: DaemonSet                 #定义资源类型为DaemonSet
+metadata:                       #元数据定义
+  name: daemset-nginx           #daemonset控制器名称
+  namespace: default            #名称空间
+  labels:                       #设置daemonset的标签
+    app: daem-nginx
+spec:                           #DaemonSet控制器的规格定义
+  selector:                     #指定匹配pod的标签
+    matchLabels:                #指定匹配pod的标签
+      app: daem-nginx           #注意：这里需要和template中定义的标签一样
+  template:                     #Pod的模板定义
+    metadata:                   #Pod的元数据定义
+      name: nginx
+      labels:                   #定义Pod的标签，需要和上面的标签一致，可以多出其他标签
+        app: daem-nginx
+    spec:                       #Pod的规格定义
+      containers:               #容器定义
+        - name: nginx-pod       #容器名字
+          image: nginx:1.18.0   #容器镜像
+          ports:                #暴露端口
+            - name: http        #端口名称
+              containerPort: 80 #暴露的端口
+```
+
+</details>    
+
+(2) 创建上面定义的daemonset控制器
+
+```shell
+kubectl apply -f daemonset.yaml
+```
+
+(3) 查看验证
+```yaml
+#查看验证
+kubectl get pods -o wide
+kubectl describe daemonset/daemset-nginx
+```
+
+### Job
+
+**创建**
+
+(1) 定义清单文件
+
+```shell
+vi job.yaml
+```
+
+<details> <summary>daemonset.yaml文件信息（点击展开）</summary>
+
+```yaml
+apiVersion: apps/v1             #api版本定义
+kind: DaemonSet                 #定义资源类型为DaemonSet
+metadata:                       #元数据定义
+  name: daemset-nginx           #daemonset控制器名称
+  namespace: default            #名称空间
+  labels:                       #设置daemonset的标签
+    app: daem-nginx
+spec:                           #DaemonSet控制器的规格定义
+  selector:                     #指定匹配pod的标签
+    matchLabels:                #指定匹配pod的标签
+      app: daem-nginx           #注意：这里需要和template中定义的标签一样
+  template:                     #Pod的模板定义
+    metadata:                   #Pod的元数据定义
+      name: nginx
+      labels:                   #定义Pod的标签，需要和上面的标签一致，可以多出其他标签
+        app: daem-nginx
+    spec:                       #Pod的规格定义
+      containers:               #容器定义
+        - name: nginx-pod       #容器名字
+          image: nginx:1.18.0   #容器镜像
+          ports:                #暴露端口
+            - name: http        #端口名称
+              containerPort: 80 #暴露的端口
+```
+
+</details>    
+
+(2) 创建上面定义的daemonset控制器
+
+```shell
+kubectl apply -f daemonset.yaml
+```
+
+(3) 查看验证
+```yaml
+#查看验证
+kubectl get pods -o wide
+kubectl describe daemonset/daemset-nginx
+```
+
+
+### CronJob
