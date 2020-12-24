@@ -747,5 +747,33 @@ kubectl get pods -o wide
 kubectl describe daemonset/daemset-nginx
 ```
 
-
 ### CronJob
+
+<details> <summary>cronJob.yaml文件信息（点击展开）</summary>
+
+
+```yaml
+apiVersion: batch/v2alpha1 
+kind: CronJob 
+metadata: 
+  name: hello 
+spec: 
+  schedule: "*/1 * * * *" 
+  jobTemplate: 
+    spec: 
+      template: 
+        spec: 
+          containers: 
+          - name: hello 
+            image: busybox 
+            args: 
+            - /bin/sh 
+            - -c 
+            - date; echo Hello from the Kubernetes cluster 
+          restartPolicy: OnFailure 
+```
+
+</details>
+
+
+
