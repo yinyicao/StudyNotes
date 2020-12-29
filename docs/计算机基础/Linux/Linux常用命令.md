@@ -163,11 +163,41 @@ find . -ctime -20
 
 ### cat命令
 
+```shell
+cat [-AbeEnstTuv] [--help] [--version] fileName
+```
+
 查看文本文件/etc/test.txt内容
 
 ```shell
 cat /etc/test.txt
 ```
+
+把 textfile1 的文档内容加上行号后输入 textfile2 这个文档里：
+
+```shell
+cat -n textfile1 > textfile2
+```
+
+把 textfile1 和 textfile2 的文档内容加上行号（空白行不加）之后将内容附加到 textfile3 文档里：
+
+```shell
+cat -b textfile1 textfile2 >> textfile3
+```
+
+参数说明：
+
+**-n** 或 **--number**：由 1 开始对所有输出的行数编号。<br>
+**-b** 或 **--number-nonblank**：和 **-n** 相似，只不过对于空白行不编号。<br>
+**-s** 或 **--squeeze-blank**：当遇到有连续两行以上的空白行，就代换为一行的空白行。<br>
+**-v** 或 **--show-nonprinting**：使用 **^** 和 **M-** 符号，除了 **LFD** 和 **TAB** 之外。<br>
+**-E** 或 **--show-ends** : 在每行结束处显示 <b>$</b>。<br>
+**-T** 或 **--show-tabs**: 将 TAB 字符显示为 **^I**。<br>
+**-e** : 等价于 **-vE**。<br>
+**-A**, **--show-al**l：等价于 **-vET**。<br>
+**-e**：等价于"**-vE**"选项；<br>
+**-t**：等价于"**-vT**"选项。
+
 
 ### mv命令
 
@@ -299,7 +329,7 @@ mode : 权限设定字串，格式如下 :
 其中： 
 
 **u** 表示该文件的拥有者，**g** 表示与该文件的拥有者属于同一个群体(group)者，o 表示其他以外的人，**a** 表示这三者皆是。 <br>
-**+** 表示增加权限、**-** 表示取消权限、**=** 表示唯一设定权限。 <br>
+**+** 表示增加权限、<b>-</b> 表示取消权限、<b>=</b> 表示唯一设定权限。 <br>
 **r** 表示可读取，**w** 表示可写入，**x** 表示可执行，**X** 表示只有当该文件是个子目录或者该文件已经被设定过为可执行。 <br>
 
 其他参数说明：

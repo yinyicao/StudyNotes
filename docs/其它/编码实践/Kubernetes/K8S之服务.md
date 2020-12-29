@@ -86,7 +86,7 @@ spec:
 
 默认情况下，用户空间模式下的 kube-proxy 通过轮转算法选择后端。
 
-<img src="_images/k8s/services-userspace-overview.png" />
+<img src="_images/k8s/services-userspace-overview.png" width="60%"/>
 
 ### iptables 代理模式
 
@@ -94,7 +94,7 @@ spec:
 
 默认的策略是，kube-proxy 在 iptables 模式下随机选择一个后端。
 
-<img src="_images/k8s/services-iptables-overview.png" />
+<img src="_images/k8s/services-iptables-overview.png" width="60%"/>
 
 ### IPVS 代理模式
 
@@ -119,4 +119,10 @@ IPVS 提供了更多选项来平衡后端 Pod 的流量。 这些是：
 
 当 kube-proxy 以 IPVS 代理模式启动时，它将验证 IPVS 内核模块是否可用。 如果未检测到 IPVS 内核模块，则 kube-proxy 将退回到以 iptables 代理模式运行。
 
-<img src="_images/k8s/services-ipvs-overview.png" />
+<img src="_images/k8s/services-ipvs-overview.png" width="60%"/>
+
+<br>
+
+# *参考：*
+
+1. 官方文档：<https://kubernetes.io/zh/docs/concepts/services-networking/>
