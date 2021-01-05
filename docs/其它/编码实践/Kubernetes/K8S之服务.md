@@ -126,3 +126,4 @@ IPVS 提供了更多选项来平衡后端 Pod 的流量。 这些是：
 # *参考：*
 
 1. 官方文档：<https://kubernetes.io/zh/docs/concepts/services-networking/>
+2. kubernetes服务发现：<https://www.yuque.com/ivescode/k8s/rntak1>
