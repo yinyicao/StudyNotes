@@ -22,6 +22,14 @@
 
 Ingress Controller 会根据你定义的 Ingress 对象，提供对应的代理能力。业界常用的各种反向代理项目，比如 Nginx、HAProxy、Envoy、Traefik 等，都已经为Kubernetes 专门维护了对应的 Ingress Controller。
 
+根据官方文档描述：
+
+你必须具有 [Ingress 控制器](https://kubernetes.io/zh/docs/concepts/services-networking/ingress-controllers) 才能满足 Ingress 的要求。 仅创建 Ingress 资源本身没有任何效果。
+你可能需要部署 Ingress 控制器，例如 [ingress-nginx](https://kubernetes.github.io/ingress-nginx/deploy/)。 你可以从许多 [Ingress 控制器](https://kubernetes.io/zh/docs/concepts/services-networking/ingress-controllers) 中进行选择。
+理想情况下，所有 Ingress 控制器都应符合参考规范。但实际上，不同的 Ingress 控制器操作略有不同。
+
+所以我们需要先安装Ingress 控制器，本文安装部署ingress-nginx。
+
 ## 部署Ingress Controller（Nginx）
 
 > `Ingress` 控制器自身是运行于`Pod`中的容器应用，一般是`Nginx`或`Envoy`一类的具有代理及负载均衡功能的守护进程，它监视着来自`API Server`的`Ingress`对象状态，并根据规则生成相应的应用程序专有格式的配置文件并通过重载或重启守护进程而使新配置生效。
@@ -111,7 +119,7 @@ job.batch/ingress-nginx-admission-patch created
 查看生成的pod，注意这里在ingress-nginx名称空间
 
 ```shell
-[root@k8s-master-01 ingress-nginx]# kubectl get pods -n ingress-nginx 称空间
+[root@k8s-master-01 ingress-nginx]# kubectl get pods -n ingress-nginx
 NAME                                       READY   STATUS      RESTARTS   AGE
 ingress-nginx-admission-create-bwgvp       0/1     Completed   0          6m44s
 ingress-nginx-admission-patch-jxprc        0/1     Completed   0          6m44s
@@ -358,6 +366,302 @@ cd ingress-nginx/multi_svc
 ```
 
 #### 创建名称空间
+
+创建一个名称空间保存本示例的所有对象（方便管理）
+
+```shell
+[root@k8s-master-01 multi_svc]# vim namespace-ms.yaml    #编写配置清单文件
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: multisvc 
+  labels:
+    env: multisvc
+[root@k8s-master-01 multi_svc]# kubectl apply -f namespace-ms.yaml #创建上面定义的名称空间
+namespace/multisvc created
+[root@k8s-master-01 multi_svc]# kubectl get namespace multisvc #查看名称空间
+NAME       STATUS   AGE
+multisvc   Active   6s
+```
+
+#### 创建后端应用和Service
+
+这里后端应用创建为一组`nginx`应用和一组`tomcat`应用
+
+1）编写资源清单文件，这里将`service`资源对象和`deployment`控制器写在这一个文件里
+
+```shell
+[root@k8s-master-01 multi_svc]# vi deploy_service-ms.yaml
+```
+
+<details> <summary>deploy_service-ms.yaml文件信息（点击展开）</summary>
+
+```yaml
+#tomcat应用的Deployment控制器
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tomcat-deploy
+  namespace: multisvc
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: tomcat
+  template:
+    metadata:
+      labels:
+        app: tomcat
+    spec:
+      containers:
+      - name: tomcat
+        image: tomcat:jdk8 # tomcat:8.5.61-jdk8-corretto
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: httpport
+          containerPort: 8080
+        - name: ajpport
+          containerPort: 8009
+---
+#tomcat应用的Service资源
+apiVersion: v1
+kind: Service
+metadata:
+  name: tomcat-svc
+  namespace: multisvc
+  labels:
+    app: tomcat-svc
+spec:
+  selector:
+    app: tomcat
+  ports:
+  - name: httpport
+    port: 8080
+    targetPort: 8080
+    protocol: TCP
+  - name: ajpport
+    port: 8009
+    targetPort: 8009
+    protocol: TCP
+
+---
+#nginx应用的Deployment控制器
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deploy
+  namespace: multisvc
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.12
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: http
+          containerPort: 80
+---
+#nginx应用的Service资源
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-svc
+  namespace: multisvc
+  labels:
+    app: nginx-svc
+spec:
+  selector:
+    app: nginx
+  ports:
+  - name: http
+    port: 80
+    targetPort: 80
+    protocol: TCP
+```
+</details>    
+
+2）创建上面定义资源对象并查看验证
+
+```shell
+[root@k8s-master-01 multi_svc]# kubectl apply -f deploy_service-ms.yaml 
+deployment.apps/tomcat-deploy created
+service/tomcat-svc created
+deployment.apps/nginx-deploy created
+service/nginx-svc created
+[root@k8s-master-01 multi_svc]# kubectl get pods -n multisvc -o wide
+NAME                            READY   STATUS    AGE   IP            NODE          NOMINATED NODE ...
+nginx-deploy-67999899b7-54dzk   1/1     Running   16m   10.244.2.37   k8s-node-02   <none>
+nginx-deploy-67999899b7-5kqzp   1/1     Running   16m   10.244.2.39   k8s-node-02   <none>
+nginx-deploy-67999899b7-8q7ln   1/1     Running   16m   10.244.1.41   k8s-node-01   <none>
+tomcat-deploy-f96d657dd-255dk   1/1     Running   16m   10.244.1.40   k8s-node-01   <none>
+tomcat-deploy-f96d657dd-bh4jn   1/1     Running   16m   10.244.2.38   k8s-node-02   <none>
+tomcat-deploy-f96d657dd-wslz9   1/1     Running   16m   10.244.1.39   k8s-node-01   <none>
+[root@k8s-master-01 multi_svc]# kubectl get svc -n multisvc
+NAME         TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)             AGE
+nginx-svc    ClusterIP   10.102.169.209   <none>        80/TCP              22s
+tomcat-svc   ClusterIP   10.108.80.38     <none>        8080/TCP,8009/TCP   22s
+[root@k8s-master-01 multi_svc]# kubectl describe svc/nginx-svc -n multisvc
+Name:              nginx-svc
+Namespace:         multisvc
+Labels:            app=nginx-svc
+Annotations:       <none>
+Selector:          app=nginx
+Type:              ClusterIP
+IP:                10.102.169.209
+Port:              http  80/TCP
+TargetPort:        80/TCP
+Endpoints:         10.244.1.41:80,10.244.2.37:80,10.244.2.39:80
+Session Affinity:  None
+Events:            <none>
+[root@k8s-master-01 multi_svc]# kubectl describe svc/tomcat-svc -n multisvc
+Name:              tomcat-svc
+Namespace:         multisvc
+Labels:            app=tomcat-svc
+Annotations:       <none>
+Selector:          app=tomcat
+Type:              ClusterIP
+IP:                10.108.80.38
+Port:              httpport  8080/TCP
+TargetPort:        8080/TCP
+Endpoints:         10.244.1.39:8080,10.244.1.40:8080,10.244.2.38:8080
+Port:              ajpport  8009/TCP
+TargetPort:        8009/TCP
+Endpoints:         10.244.1.39:8009,10.244.1.40:8009,10.244.2.38:8009
+Session Affinity:  None
+Events:            <none
+```
+
+#### 创建Ingress资源对象
+
+1）编写资源清单文件
+
+```shell
+[root@k8s-master-01 multi_svc]# vi ingress_host-ms.yaml 
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: multi-ingress
+  namespace: multisvc
+spec:
+  rules:
+  - host: nginx.imyapp.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: nginx-svc
+            port:
+              number: 80
+  - host: tomcat.imyapp.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: tomcat-svc
+            port:
+              number: 8080
+```
+
+2）创建上面定义资源对象并查看验证
+
+```shell
+[root@k8s-master-01 multi_svc]# kubectl apply -f ingress_host-ms.yaml
+ingress.networking.k8s.io/multi-ingress created
+[root@k8s-master-01 multi_svc]# ^C
+[root@k8s-master-01 multi_svc]# kubectl get ingress -n multisvc 
+Warning: extensions/v1beta1 Ingress is deprecated in v1.14+, unavailable in v1.22+; use networking.k8s.io/v1 Ingress
+NAME            CLASS    HOSTS                                ADDRESS   PORTS   AGE
+multi-ingress   <none>   nginx.imyapp.com,tomcat.imyapp.com             80      34s
+[root@k8s-master-01 multi_svc]# kubectl describe ingress/multi-ingress -n multisvc
+Warning: extensions/v1beta1 Ingress is deprecated in v1.14+, unavailable in v1.22+; use networking.k8s.io/v1 Ingress
+Name:             multi-ingress
+Namespace:        multisvc
+Address:          
+Default backend:  default-http-backend:80 (<error: endpoints "default-http-backend" not found>)
+Rules:
+  Host               Path  Backends
+  ----               ----  --------
+  nginx.imyapp.com   
+                     /   nginx-svc:80   10.244.1.41:80,10.244.2.37:80,10.244.2.39:80)
+  tomcat.imyapp.com  
+                     /   tomcat-svc:8080   10.244.1.39:8080,10.244.1.40:8080,10.244.2.38:8080)
+Annotations:         <none>
+Events:
+  Type    Reason  Age   From                      Message
+  ----    ------  ----  ----                      -------
+  Normal  Sync    47s   nginx-ingress-controller  Scheduled for sync
+```
+
+#### 测试访问
+
+这是测试自定义的域名，故需要配置`host`
+
+```shell
+[root@k8s-master-01 multi_svc]# cat /etc/hosts
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+#之前实例一添加nginx.ilinux.io
+172.26.11.14  k8s-master-01 nginx.ilinux.io nginx.imyapp.com tomcat.imyapp.com
+172.26.11.139 k8s-node-01 nginx.ilinux.io nginx.imyapp.com tomcat.imyapp.com
+172.26.11.141 k8s-node-02 nginx.ilinux.io nginx.imyapp.com tomcat.imyapp.com
+199.232.68.133 raw.githubusercontent.com
+```
+
+查看部署的`Ingress`的`Service`对象的端口
+
+```shell
+[root@k8s-master-01 multi_svc]# kubectl get svc -n ingress-nginx
+NAME                                 TYPE        CLUSTER-IP      PORT(S)                      AGE
+ingress-nginx-controller             NodePort    10.111.4.136    80:32183/TCP,443:32127/TCP   44h
+ingress-nginx-controller-admission   ClusterIP   10.108.19.135   443/TCP                      44h
+```
+
+访问`nginx.imyapp.com:32183`、`tomcat.imyapp.com:32183`
+
+### 将不同的服务映射到相同主机的不同路径
+
+<img src="_images/k8s/1591236584654-5a0d909c-7267-446c-bcd6-98c433f7312a.png" width="80%"/>
+
+> 在这种情况下，根据请求的`URL`中的路径，请求将发送到两个不同的服务。因此，客户端可以通过一个`IP`地址（`Ingress` 控制器的`IP`地址）访问两种不同的服务。
+>
+> 
+>
+> **注意**：这里`Ingress`中`path`的定义，需要与后端真实`Service`提供的`Path`一致，否则将被转发到一个不存在的`path`上，引发错误。
+
+#### Ingress定义示例
+
+```yml
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: tomcat-ingress
+  namespace: multisvc
+spec:
+  rules:
+  - host: www.imyapp.com
+    http:
+      paths: 
+      - path: /nginx
+        backend:
+          serviceName: nginx-svc
+          servicePort: 80
+      - path: /tomcat
+        backend:
+          serviceName: tomcat-svc
+          servicePort: 8080
+```
 
 <br>
 

@@ -564,7 +564,7 @@ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
 ```
 
-查看证书
+查看证书（<https://kubernetes.io/docs/tasks/administer-cluster/kubeadm/kubeadm-certs/>）
 
 ```shell
 ll /etc/kubernetes/pki
