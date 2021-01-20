@@ -1,13 +1,22 @@
 # RESTful API
 
+> REST，即Representational State Transfer。
+>
 > RESTful 是目前最流行的 API 设计规范，用于 Web 数据接口的设计。
+
+## RESTful架构
+
+（1）每一个URI代表一种资源；
+
+（2）客户端和服务器之间，传递这种资源的某种表现层；
+
+（3）客户端通过四个HTTP动词，对服务器端资源进行操作，实现"表现层状态转化"。
 
 ## URL设计
 
->参考：http://www.ruanyifeng.com/blog/2018/10/restful-api-best-practices.html
-
 动词+宾语：
 &emsp;&emsp;动词通常就是五种 HTTP 方法，对应 CRUD 操作。
+
 ```
 GET：读取（Read）
 POST：新建（Create）
@@ -81,3 +90,8 @@ Location: /api/orders/12345
 - HTTP PUT 方法：**幂等**。PUT所对应的URI是要创建或更新的资源本身。比如：`PUT /articles/4231`的语义是创建或更新ID为`4231`的帖子。对同一URI进行多次PUT的副作用和一次PUT是相同的；因此，PUT方法具有幂等性。
 - HTTP POST 方法：**非幂等**。调用多次，都将产生新的资源。POST所对应的URI并非创建的资源本身，而是资源的接收者。比如：`POST /articles`的语义是在`/articles`下创建一篇帖子，HTTP响应中应包含帖子的创建状态以及帖子的URI。两次相同的POST请求会在服务器端创建两份资源，它们具有不同的URI；所以，POST方法不具备幂等性。
 - HTTP PATCH 方法：**非幂等**。PATCH 提供的实体则需要根据程序或其它协议的定义，解析后在服务器上执行，以此来修改服务器上的资源。换句话说，PATCH 请求是会执行某个程序的，如果重复提交，程序可能执行多次，对服务器上的资源就可能造成额外的影响，所以它是非幂等的。
+
+## 参考
+
+1. [阮一峰的网络日志-理解RESTful架构](http://www.ruanyifeng.com/blog/2011/09/restful.html)
+2. [阮一峰的网络日志-RESTful API 最佳实践](http://www.ruanyifeng.com/blog/2018/10/restful-api-best-practices.html)
