@@ -238,6 +238,69 @@ git reflog
 
   通过`git log`会发现多了一条commit记录。（<span style="color:red">ps：revert几次就会产生几条commit记录，将多条commit记录合并可使用`git rebase `命令</span>）
 
+### 暂存更改(git stash)
+
+> 将工作区的修改保存到一个特定的空间去，然后将工作区的修改撤销掉。需要注意的是，只能保存git已经跟踪的文件，新建文件并且没有commit过的就无法保存了，而 git stash 暂存起来的修改是可以应用到当前或者其他分支上面去的。
+
+官方文档：<https://git-scm.com/docs/git-stash>
+
+- 暂存工作区git已跟踪的文件修改
+
+  ```shell
+  git stash [save "message"] #git stash 或 git stash save "备注"
+  ```
+
+
+- 查看所有暂存条目
+
+  ```shell
+  git stash show #git stash show -a # git stash show stash@{0} -a
+  ```
+
+- 应用某条暂存的修改并删除该条暂存
+
+  ```shell
+  git stash pop # git stash pop stash@{1}
+  ```
+
+- 删除某条暂存
+
+  ```shell
+  git stash drop stash@{2}
+  ```
+
+- 应用某条暂存到当前分支
+
+  ```shell
+  git stash apply stash@{2}
+  ```
+
+- 清空所有的暂存条目
+
+  ```shell
+  git stash clear
+  ```
+
+- 查看帮助
+
+  ```shell
+  git stash --help
+  ```
+
+**应用场景：**
+
+1. 同一分支多人修改
+
+   在本地修改好后，发现远程分支已经被改动了，此时我本地也被改动了就造成了冲突，无法push或者pull。
+   
+   先stash修改-->再pull-->pop/apply
+
+
+2. 在错误的分支上修改
+
+   不小心改动了其他分支，例如忘记切换，直接在别人的分支上做了改动。
+   
+   先stash修改-->再checkout-->pop/apply
 
 ### 撤销修改
 
