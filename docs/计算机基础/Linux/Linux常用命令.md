@@ -663,6 +663,44 @@ uptime from procps-ng 3.3.10
 
  `procps`是一个实用程序包，主要包括`ps`,` top`,` kill`等程序主要用来显示与控制一些系统信息，进程状态之类的内容 。
 
+### jps命令
+
+> 即Java Virtual Machine Process Status Tool，是java提供的一个显示当前所有java进程pid的命令，适合在linux/unix平台上简单察看当前java进程的一些简单情况。
+>
+> ps命令主要是用来显示当前系统的进程情况，有哪些进程以及进程id。 
+>
+> jps 也是一样，它的作用是显示当前系统的java进程情况及进程id。
+>
+> 我们可以通过它来查看我们到底启动了几个java进程（因为每一个java程序都会独占一个java虚拟机实例）
+
+```shell
+C:\Users\yyc>jps
+11408 RemoteMavenServer36
+20080 Launcher
+5296 RemoteMavenServer36
+5792 RemoteMavenServer36
+5904 Jps
+8224
+```
+
+注：在当前命令行下打jps(jps存放在JAVA_HOME/bin/jps，需将JAVA_HOME/bin/加入到Path环境变量中) 。
+
+**常用参数：**
+
+```shell
+jps -q # 举例
+```
+
+**-q**  只显示pid，不显示class名称,jar文件名和传递给main方法的参数
+
+**-m** 输出传递给main方法的参数，在嵌入式jvm上可能是null
+
+**-l**    输出应用程序main class的完整package名或者应用程序的jar文件完整路径名
+
+**-v** 输出传递给JVM的参数
+
+**-V** 隐藏输出传递给JVM的参数
+
 ## 系统设置
 
 ### history命令
