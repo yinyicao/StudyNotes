@@ -47,6 +47,7 @@ firewalld是centos7里面的新的防火墙命令，它底层还是使用 iptabl
 ## 开放端口
 
 添加：`firewall-cmd --zone=public --add-port=80/tcp --permanent`    （--permanent永久生效，没有此参数重启后失效）</br>
+添加多个端口：`firewall-cmd  --zone=public --add-port=8080-8083/tcp --permanent`</br> 
 重新载入：`firewall-cmd --reload`</br>
 查看：`firewall-cmd --zone=public --query-port=80/tcp`</br>
 删除：`firewall-cmd --zone=public --remove-port=80/tcp --permanent`</br>
