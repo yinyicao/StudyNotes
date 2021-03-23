@@ -310,6 +310,63 @@ cp /test1/file1 /test3/file2
 cp -Rf /home/user1/* /root/temp/
 ```
 
+### scp命令
+
+> Linux scp 命令用于 Linux 之间复制文件和目录。
+>
+> scp 是 secure copy 的缩写, scp 是 linux 系统下基于 ssh 登陆进行安全的远程文件拷贝命令。
+>
+> scp 是加密的，[rcp](https://www.runoob.com/linux/linux-comm-rcp.html) 是不加密的，scp 是 rcp 的加强版
+
+语法：
+
+```shell
+scp [-1246BCpqrv] [-c cipher] [-F ssh_config] [-i identity_file]
+[-l limit] [-o ssh_option] [-P port] [-S program]
+[[user@]host1:]file1 [...] [[user@]host2:]file2
+# scp [可选参数] file_source file_target 
+```
+
+比较常用的**参数说明**：
+
+- **-B**： 使用批处理模式（传输过程中不询问传输口令或短语）
+- **-C**： 允许压缩。（将-C标志传递给ssh，从而打开压缩功能）
+- **-p**：保留原文件的修改时间，访问时间和访问权限。
+- **-q**： 不显示传输进度条。
+- **-r**： 递归复制整个目录。
+- **-P port**：注意是大写的P, port是指定数据传输用到的端口号
+
+**实例：**
+
+1、从本地复制到远程
+
+```shell
+#命令执行后需要再输入密码，仅指定了远程的目录，文件名字不变
+scp local_file remote_username@remote_ip:remote_folder 
+#命令执行后需要再输入密码，指定了远程的文件名字
+scp local_file remote_username@remote_ip:remote_file 
+#命令执行后需要输入用户名和密码，仅指定了远程的目录，文件名字不变
+scp local_file remote_ip:remote_folder 
+##命令执行后需要输入用户名和密码，指定了远程的文件名字
+scp local_file remote_ip:remote_file
+#递归复制整个目录
+scp -r local_folder remote_username@remote_ip:remote_folder 
+```
+
+使用命令将本地的包传到远程服务器，并重命名（本地为windows系统可以使用`gitbash`客户端）：
+
+```shell
+scp ./app.war user1@10.6.77.84:/opt/app/jboss-eap-5.0/jboss-as/server/server/deploy/app.war-2021333
+```
+
+2、从远程复制到本地
+
+从远程复制到本地，只要将从本地复制到远程的命令的后2个参数调换顺序即可。
+
+```shell
+scp -r root@199.9.9.9:/home/root/others/ /home/space/music/
+```
+
 ### chmod命令
 
 > 修改文件权限命令， Linux/Unix 的文件调用权限分为三级 : 文件拥有者、群组、其他。 
@@ -575,13 +632,37 @@ ifconfig
 
 ### telnet命令
 
-> telnet命令用于远端（远程）登录，可用来测试指定端口是否开发。
+> telnet命令用于远端（远程）登录，可用来测试指定端口是否开放。
 
 显示IP地址(10.221.x.x)的指定端口(8080)是否可访问（开放）
 
 ```shell
 telnet  10.221.x.x  8080
 ```
+
+### ssh命令
+
+> 远程连接服务器，Windows下使用需要安装SSH工具。Putty、OpenSSH等，Git Bash也可以用。
+
+```shell
+ssh name@server-ip
+```
+
+或者
+
+```shell
+ssh server-ip -l name
+```
+
+以上两种方式都可以远程登录到服务器，server-ip代表远程服务器的IP地址，name代表SSH登陆进远程服务器的用户名，一般为root。
+
+如果远程服务器的端口是其他的，在后面加上-p参数。
+
+```
+ssh name@server-ip -p 12345
+```
+
+连接成功终端就会提示继续输入用户密码，输入就好了。
 
 ## 系统管理
 
