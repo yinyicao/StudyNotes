@@ -278,6 +278,13 @@ rm -rf /var/log/httpd/access
 rm -f /var/log/httpd/access.log
 ```
 
+删除多个文件并提示是否删除
+
+```shell
+rm -i test.txt test2.txt test3.txt
+#rm -i test*.txt
+```
+
 ### cp命令
 
 命令格式：
