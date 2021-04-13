@@ -476,6 +476,13 @@ git branch --set-upstream-to=origin/dev  dev
   git checkout -b <name>
   ```
 
+- 将远程git仓库里的指定分支拉取到本地（本地不存在的分支）
+
+  ```bash
+  git checkout -b 本地分支名 origin/远程分支名
+  #git checkout -b  release origin/release-9.4
+  ```
+
 - 删除分支
 
   ```shell
@@ -525,18 +532,19 @@ git branch --set-upstream-to=origin/dev  dev
 
   ```shell
   git push origin <branch-name>
-  ```
-
-  例如：
-
+  #git push --set-upstream origin 分支名
+```
+  
+例如：
+  
   ```shell
    git push origin dev
-  ```
-
-  效果图：
-
-  <img src="_images/1547705187446.png" />  
-
+```
+  
+效果图：
+  
+<img src="_images/1547705187446.png" />  
+  
   <img src="_images/1547705238814.png" />  
   
   
