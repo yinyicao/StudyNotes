@@ -116,7 +116,7 @@
   > 可以通过 git reset --hard [hash] 回退到指定操作版本，其中hash为git reflog看到的操作ID。
   
   ```shell
-git reflog
+  git reflog
   ```
 
   例如：
@@ -360,6 +360,117 @@ git reflog
 - **git diff HEAD**：显示工作目录(已track但未add文件)和暂存区(已add但未commit文件)与最后一次commit（同样也可以用`~`或`^`来表示前几个版本）之间的的所有不相同文件的增删改。
 - **git diff <分支名1> <分支名2>** ：比较两个分支上最后 commit 的内容的差别
 
+## git cherry-pick
+
+> 对于多分支的代码库，将代码从一个分支转移到另一个分支是常见需求。
+>
+> 这时分两种情况。一种情况是，你需要另一个分支的所有代码变动，那么就采用合并（`git merge`）。另一种情况是，你只需要部分代码变动（某一个或几个提交），这时可以采用 Cherry pick。
+
+**基础用法：**
+
+`git cherry-pick`命令的作用，就是将指定的提交（commit）应用于其他分支。
+
+举例来说，代码仓库有`master`和`feature`两个分支。
+
+```bash
+    a - b - c - d   Master
+         \
+           e - f - g Feature
+```
+
+现在将提交`f`应用到`master`分支。
+
+ ```bash
+ # 切换到 master 分支
+ $ git checkout master
+ 
+ # Cherry pick 操作
+ $ git cherry-pick f
+ ```
+
+上面的操作完成以后，代码库就变成了下面的样子。
+
+ ```bash
+     a - b - c - d - f   Master
+          \
+            e - f - g Feature
+ ```
+
+从上面可以看到，`master`分支的末尾增加了一个提交`f`。
+
+`git cherry-pick`命令的参数，不一定是提交的哈希值，分支名也是可以的，表示转移该分支的最新一次提交。
+
+```bash
+git cherry-pick feature
+```
+
+上面代码表示将`feature`分支的最近一次提交，转移到当前分支。
+
+**其它用法：**
+
+```bash
+#一次转移多个提交
+git cherry-pick <HashA> <HashB>
+#转移一系列的连续提交【不包含提交A】（提交 A 必须早于提交 B，否则命令将失败，但不会报错）
+git cherry-pick A..B
+#转移一系列的连续提交【包含提交A】
+git cherry-pick A^..B 
+```
+
+**配置项：**
+
+`git cherry-pick`命令的常用配置项如下。
+
+**（1）`-e`，`--edit`**
+
+打开外部编辑器，编辑提交信息。
+
+**（2）`-n`，`--no-commit`**
+
+只更新工作区和暂存区，不产生新的提交。
+
+**（3）`-x`**
+
+在提交信息的末尾追加一行`(cherry picked from commit ...)`，方便以后查到这个提交是如何产生的。
+
+**（4）`-s`，`--signoff`**
+
+在提交信息的末尾追加一行操作者的签名，表示是谁进行了这个操作。
+
+**（5）`-m parent-number`，`--mainline parent-number`**
+
+如果原始提交是一个合并节点，来自于两个分支的合并，那么 Cherry pick 默认将失败，因为它不知道应该采用哪个分支的代码变动。
+
+`-m`配置项告诉 Git，应该采用哪个分支的变动。它的参数`parent-number`是一个从`1`开始的整数，代表原始提交的父分支编号。
+
+```bash
+ git cherry-pick -m 1 <commitHash>
+```
+
+上面命令表示，Cherry pick 采用提交`commitHash`来自编号1的父分支的变动。
+
+一般来说，1号父分支是接受变动的分支（the branch being merged into），2号父分支是作为变动来源的分支（the branch being merged from）。
+
+**代码冲突：**
+
+如果操作过程中发生代码冲突，Cherry pick 会停下来，让用户决定如何继续操作。
+
+**（1）`--continue`**
+
+用户解决代码冲突后，第一步将修改的文件重新加入暂存区（`git add .`），第二步使用下面的命令，让 Cherry pick 过程继续执行。
+
+```bash
+git cherry-pick --continue
+```
+
+**（2）`--abort`**
+
+发生代码冲突后，放弃合并，回到操作前的样子。
+
+**（3）`--quit`**
+
+发生代码冲突后，退出 Cherry pick，但是不回到操作前的样子。
+
 ## 远程仓库
 
 > 通过gitee或github创建远程仓库并于本地仓库建立连接，将代码和文件托管到远程仓库中。
@@ -540,13 +651,13 @@ git branch --set-upstream-to=origin/dev  dev
   ```shell
    git push origin dev
 ```
-  
+
 效果图：
-  
+
 <img src="_images/1547705187446.png" />  
-  
+
   <img src="_images/1547705238814.png" />  
-  
+
   
 
 ## 其它
